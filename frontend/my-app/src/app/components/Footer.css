@@ -1,0 +1,152 @@
+.ft {
+    background: #efefef;
+    color: #222;
+    margin-top: 24px;
+}
+
+.ft-inner {
+    max-width: 1400px;
+    padding: 24px 80px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+.ft-col {
+    min-width: 200px;
+}
+
+.ft .ft-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr 1.4fr;
+    /* giống bố cục hình */
+    gap: 28px;
+}
+
+.ft-logo {
+    width: 56px;
+    height: 56px;
+    background: #fff;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .06);
+    margin-bottom: 12px;
+}
+
+.ft-logo-i {
+    width: 30px;
+    height: 30px;
+    fill: #111;
+}
+
+.ft-h4 {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    margin: 10px 0 8px 0;
+}
+
+.ft-text {
+    color: #555;
+    line-height: 1.55;
+    font-size: 14px;
+}
+
+.ft-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ft-list li {
+    margin: 10px 0;
+}
+
+.ft-list a {
+    color: #3b3b3b;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.ft-list a:hover {
+    text-decoration: underline;
+}
+
+.ft-badges {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 6px;
+}
+
+.ft-badges img {
+    height: 40px;
+    display: block;
+    background: #fff;
+    border-radius: 8px;
+    padding: 4px 8px;
+    border: 1px solid #e5e5e5;
+}
+
+.mt24 {
+    margin-top: 24px;
+}
+
+.ft-address {
+    color: #444;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 6px 0 6px;
+}
+
+.ft-map {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #444;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.ft-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #111;
+    display: inline-block;
+}
+
+/* bottom strip */
+.ft-bottom {
+    border-top: 1px solid #e1e1e1;
+    background: #f4f4f4;
+    font-size: 13px;
+    color: #666;
+}
+
+.ft-bottom .ft-inner {
+    padding: 12px 80px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .ft .ft-inner {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .ft .ft-inner {
+        grid-template-columns: 1fr;
+    }
+
+    .ft-inner {
+        padding: 20px;
+    }
+
+    .ft-bottom .ft-inner {
+        padding: 12px 20px;
+    }
+}

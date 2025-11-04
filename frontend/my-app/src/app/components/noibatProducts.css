@@ -1,0 +1,89 @@
+/* noibatProducts.css */
+
+.fp-wrap {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.fp-title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.fp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+
+.fp-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: white;
+    overflow: hidden;
+    padding-bottom: 15px;
+    transition: transform .2s ease, box-shadow .2s ease;
+    cursor: pointer;
+}
+
+.fp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.fp-imgbox {
+    width: 100%;
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: #fafafa;
+}
+
+.fp-imgbox img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fp-info {
+    padding: 15px 15px 0;
+}
+
+.fp-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.fp-price {
+    font-size: 17px;
+    color: #d62828;
+    font-weight: 600;
+}
+
+.fp-btn {
+    margin: 15px auto 0;
+    display: block;
+    width: 90%;
+    padding: 10px 0;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    background: #111;
+    color: #fff;
+    border-radius: 5px;
+    transition: background .2s ease;
+}
+
+.fp-btn:hover {
+    background: #e63946;
+}

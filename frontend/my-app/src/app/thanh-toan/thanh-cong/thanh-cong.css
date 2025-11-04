@@ -1,0 +1,63 @@
+.succ-wrap {
+    max-width: 720px;
+    margin: 60px auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.succ-box {
+    text-align: left;
+    padding: 26px;
+    margin-top: 30px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.succ-meta p {
+    margin: 5px 0;
+
+    line-height: 1.8;
+    font-size: 17px;
+}
+
+/* Sản phẩm trong đơn */
+.succ-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px dotted #ddd;
+    font-size: 16px;
+}
+
+.succ-total {
+    margin-top: 18px;
+    font-size: 19px;
+    text-align: right;
+    font-weight: 600;
+}
+
+.succ-actions {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+.succ-btn {
+    padding: 12px 22px;
+    background: #ff007a;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.succ-btn:hover {
+    opacity: 0.85;
+}
+
+.succ-btn.sec {
+    background: #333;
+}
