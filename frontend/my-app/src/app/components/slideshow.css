@@ -78,7 +78,7 @@
     background: #fff;
 }
 
-/* giảm chuyển động nếu user chọn reduce-motion */
+
 @media (prefers-reduced-motion: reduce) {
 
     .hero-slide,

@@ -12,12 +12,10 @@ export default function NavBar() {
     const [q, setQ] = useState('');
     const [user, setUser] = useState(null);
 
-
     useEffect(() => {
         const savedUser = localStorage.getItem('user');
         if (savedUser) setUser(JSON.parse(savedUser));
     }, []);
-
 
     const goCart = (e) => {
         e.preventDefault();
@@ -28,7 +26,6 @@ export default function NavBar() {
         }
     };
 
-    // seacrh
     const onSearch = (e) => {
         e.preventDefault();
         const keyword = q.trim();
@@ -37,11 +34,9 @@ export default function NavBar() {
         setShowMenu(false);
     };
 
-    //  Đăng xuất
     const handleLogout = () => {
         localStorage.removeItem('user');
         localStorage.removeItem('auth_token');
-
         setUser(null);
         setShowMenu(false);
         router.push('/login');
@@ -82,7 +77,6 @@ export default function NavBar() {
                         aria-expanded={showMenu}
                         aria-label="Tài khoản"
                     >
-
                         {user ? <FiUserCheck size={18} /> : <FiUser size={18} />}
                     </button>
 
@@ -91,6 +85,15 @@ export default function NavBar() {
                             {user ? (
                                 <>
                                     <span className="username">Xin chào, {user.name || 'User'}</span>
+
+                                    <Link
+                                        href="/account"
+                                        className="account-link"
+                                        onClick={() => setShowMenu(false)}
+                                    >
+                                        Tài khoản
+                                    </Link>
+
                                     <button
                                         className="logout-btn"
                                         onClick={handleLogout}

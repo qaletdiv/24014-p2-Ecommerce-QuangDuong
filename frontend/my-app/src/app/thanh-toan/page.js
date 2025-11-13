@@ -39,28 +39,37 @@ export default function CheckoutPage() {
             return;
         }
 
-        // Lấy đơn hàng cũ
-        const orders = JSON.parse(localStorage.getItem("orders")) || [];
+        // ✅ Lấy user hiện tại
+        const user = JSON.parse(localStorage.getItem("user")) || null;
+        if (!user) {
+            router.push("/login?redirect=/thanh-toan");
+            return;
+        }
 
-        // Tạo đơn hàng mới
+        // ✅ Lấy danh sách đơn hàng cũ (đồng bộ với trang /account)
+        const orderHistory = JSON.parse(localStorage.getItem("order_history")) || [];
+
+        // ✅ Tạo đơn hàng mới
         const newOrder = {
             id: Date.now(),
-            items: cart,
+            date: new Date().toLocaleString("vi-VN"),
             name,
             phone,
             address,
+            email: user.email, // 👈 rất quan trọng để trang /account lọc
             total,
-            createdAt: new Date().toISOString(),
-            status: "Đang xử lý"
+            items: cart,
+            status: "pending", // "pending" = đang xử lý, sau có thể cập nhật thành "done"
         };
 
-        // Lưu
-        localStorage.setItem("orders", JSON.stringify([...orders, newOrder]));
+        // ✅ Lưu lại lịch sử
+        orderHistory.push(newOrder);
+        localStorage.setItem("order_history", JSON.stringify(orderHistory));
 
-        // Xoá giỏ hàng
+        // ✅ Xoá giỏ hàng
         localStorage.removeItem("cart");
 
-        // Điều hướng sang trang thành công
+        // ✅ Chuyển tới trang xác nhận đơn hàng
         router.push("/thanh-toan/thanh-cong");
     };
 
@@ -71,7 +80,6 @@ export default function CheckoutPage() {
             <h1>Thanh toán</h1>
 
             <div className="checkout-grid">
-
                 {/* Form thông tin */}
                 <div className="checkout-form">
                     <h2>Thông tin giao hàng</h2>
@@ -93,7 +101,9 @@ export default function CheckoutPage() {
 
                     {cart.map((item, i) => (
                         <div key={i} className="checkout-item">
-                            <span>{item.name} ({item.size} - SL: {item.qty})</span>
+                            <span>
+                                {item.name} ({item.size} - SL: {item.qty})
+                            </span>
                             <b>{(item.price * item.qty).toLocaleString()}₫</b>
                         </div>
                     ))}

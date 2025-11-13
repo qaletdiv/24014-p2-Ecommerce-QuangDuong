@@ -72,10 +72,8 @@ export default function ChiTietSanPham() {
         );
 
         if (existingIndex !== -1) {
-            // Nếu rồi thì tăng số lượng
             cart[existingIndex].qty += soLuong;
         } else {
-            // Nếu chưa thì push sản phẩm mới
             cart.push({
                 id: sp.id,
                 name: sp.name,
@@ -100,13 +98,9 @@ export default function ChiTietSanPham() {
     return (
         <>
             <div className="pd-wrap">
-                {/* Ảnh chính */}
                 <div className="pd-hero">
-                    {/* sửa lại thẻ Image */}
                     <Image src={gallery[activeIdx]} alt={sp.name} width={800} height={800} />
                 </div>
-
-                {/* Thumbnail */}
                 <div className="pd-thumbs">
                     {gallery.map((src, i) => (
                         <button key={i}

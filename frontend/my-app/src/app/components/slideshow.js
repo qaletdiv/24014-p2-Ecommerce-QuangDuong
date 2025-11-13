@@ -41,8 +41,6 @@ export default function HeroSlider() {
             {/* arrows */}
             <button className="hero-arrow left" onClick={prev} aria-label="Prev">‹</button>
             <button className="hero-arrow right" onClick={next} aria-label="Next">›</button>
-
-            {/* dots */}
             <div className="hero-dots">
                 {slides.map((_, idx) => (
                     <button

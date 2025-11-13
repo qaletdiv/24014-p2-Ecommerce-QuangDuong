@@ -54,7 +54,7 @@ export default function ThanhCong() {
 
             <div className="succ-actions">
                 <Link className="succ-btn" href="/san-pham">Tiếp tục mua sắm</Link>
-                <Link className="succ-btn sec" href="/don-hang">Xem lịch sử đơn hàng</Link>
+                <Link className="succ-btn sec" href="/account">Xem lịch sử đơn hàng</Link>
             </div>
         </div>
     );
