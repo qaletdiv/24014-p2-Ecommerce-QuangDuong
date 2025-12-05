@@ -13,6 +13,7 @@ export default function CheckoutPage() {
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
     const [error, setError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem("auth_token");
@@ -21,7 +22,7 @@ export default function CheckoutPage() {
             return;
         }
 
-        const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+        const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
         if (cartData.length === 0) {
             router.push("/gio-hang");
             return;
@@ -29,48 +30,67 @@ export default function CheckoutPage() {
 
         setCart(cartData);
         setLoading(false);
-    }, []);
+    }, [router]);
 
-    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const total = cart.reduce(
+        (sum, item) => sum + item.price * (item.qty || 1),
+        0
+    );
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (!name || !phone || !address) {
             setError("Vui lòng nhập đầy đủ thông tin giao hàng.");
             return;
         }
 
-        // ✅ Lấy user hiện tại
-        const user = JSON.parse(localStorage.getItem("user")) || null;
-        if (!user) {
+        const token = localStorage.getItem("auth_token");
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+
+        if (!token || !user) {
             router.push("/login?redirect=/thanh-toan");
             return;
         }
 
-        // ✅ Lấy danh sách đơn hàng cũ (đồng bộ với trang /account)
-        const orderHistory = JSON.parse(localStorage.getItem("order_history")) || [];
-
-        // ✅ Tạo đơn hàng mới
-        const newOrder = {
-            id: Date.now(),
-            date: new Date().toLocaleString("vi-VN"),
-            name,
-            phone,
-            address,
-            email: user.email, // 👈 rất quan trọng để trang /account lọc
-            total,
+        setError("");
+        setSubmitting(true);
+        const payload = {
             items: cart,
-            status: "pending", // "pending" = đang xử lý, sau có thể cập nhật thành "done"
+            totalPrice: total,
+            address,
+            note: `Tên: ${name} - SĐT: ${phone}`,
         };
 
-        // ✅ Lưu lại lịch sử
-        orderHistory.push(newOrder);
-        localStorage.setItem("order_history", JSON.stringify(orderHistory));
+        try {
+            const res = await fetch("http://localhost:4000/api/orders", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(payload),
+            });
 
-        // ✅ Xoá giỏ hàng
-        localStorage.removeItem("cart");
+            if (!res.ok) {
+                const txt = await res.text();
+                console.error("Create order failed:", txt);
+                setError("Đặt hàng thất bại, vui lòng thử lại.");
+                setSubmitting(false);
+                return;
+            }
 
-        // ✅ Chuyển tới trang xác nhận đơn hàng
-        router.push("/thanh-toan/thanh-cong");
+            const newOrder = await res.json();
+
+            // xoá và cập nhật NavBar
+            localStorage.removeItem("cart");
+            window.dispatchEvent(new Event("cart-updated"));
+            localStorage.setItem("last_order", JSON.stringify(newOrder));
+
+            router.push("/thanh-toan/thanh-cong");
+        } catch (err) {
+            console.error(err);
+            setError("Có lỗi xảy ra, hãy thử lại sau.");
+            setSubmitting(false);
+        }
     };
 
     if (loading) return <div className="checkout-wrap">Đang tải...</div>;
@@ -84,14 +104,30 @@ export default function CheckoutPage() {
                 <div className="checkout-form">
                     <h2>Thông tin giao hàng</h2>
 
-                    <input placeholder="Họ tên" value={name} onChange={e => setName(e.target.value)} />
-                    <input placeholder="Số điện thoại" value={phone} onChange={e => setPhone(e.target.value)} />
-                    <textarea placeholder="Địa chỉ" value={address} onChange={e => setAddress(e.target.value)} />
+                    <input
+                        placeholder="Họ tên"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                    />
+                    <input
+                        placeholder="Số điện thoại"
+                        value={phone}
+                        onChange={e => setPhone(e.target.value)}
+                    />
+                    <textarea
+                        placeholder="Địa chỉ"
+                        value={address}
+                        onChange={e => setAddress(e.target.value)}
+                    />
 
                     {error && <div className="checkout-error">{error}</div>}
 
-                    <button onClick={handleConfirm} className="checkout-btn">
-                        Xác nhận đặt hàng
+                    <button
+                        onClick={handleConfirm}
+                        className="checkout-btn"
+                        disabled={submitting}
+                    >
+                        {submitting ? "Đang xử lý..." : "Xác nhận đặt hàng"}
                     </button>
                 </div>
 
@@ -104,12 +140,12 @@ export default function CheckoutPage() {
                             <span>
                                 {item.name} ({item.size} - SL: {item.qty})
                             </span>
-                            <b>{(item.price * item.qty).toLocaleString()}₫</b>
+                            <b>{(item.price * item.qty).toLocaleString("vi-VN")}₫</b>
                         </div>
                     ))}
 
                     <div className="checkout-total">
-                        Tổng thanh toán: <b>{total.toLocaleString()}₫</b>
+                        Tổng thanh toán: <b>{total.toLocaleString("vi-VN")}₫</b>
                     </div>
                 </div>
             </div>

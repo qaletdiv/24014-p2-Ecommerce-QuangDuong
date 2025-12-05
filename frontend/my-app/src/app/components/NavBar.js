@@ -23,7 +23,13 @@ export default function NavBar() {
     }, []);
     const updateCartCount = () => {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        setCartCount(cart.length);
+
+        const totalQty = cart.reduce(
+            (sum, item) => sum + (item.qty || 1),
+            0
+        );
+
+        setCartCount(totalQty);
     };
 
     const goCart = (e) => {
@@ -38,7 +44,13 @@ export default function NavBar() {
     const onSearch = (e) => {
         e.preventDefault();
         const keyword = q.trim();
-        if (!keyword) return;
+
+        if (!keyword) {
+            router.push('/san-pham');
+            setShowMenu(false);
+            return;
+        }
+
         router.push(`/san-pham?search=${encodeURIComponent(keyword)}`);
         setShowMenu(false);
     };

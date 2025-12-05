@@ -6,32 +6,49 @@ import './account.css';
 export default function TaiKhoan() {
     const [user, setUser] = useState(null);
     const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // ✅ Kiểm tra đăng nhập
         const token = localStorage.getItem('auth_token');
-        const userData = JSON.parse(localStorage.getItem('user'));
-
-        if (!token || !userData) {
+        const userJson = localStorage.getItem('user');
+        if (!token || !userJson) {
             window.location.href = '/login?redirect=/account';
             return;
         }
 
+        const userData = JSON.parse(userJson);
         setUser(userData);
+        const fetchOrders = async () => {
+            try {
+                const res = await fetch('http://localhost:4000/api/orders/my', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-        // ✅ Lấy danh sách đơn hàng từ localStorage
-        const allOrders = JSON.parse(localStorage.getItem('order_history')) || [];
-        const userOrders = allOrders.filter(o => o.email === userData.email);
-        setOrders(userOrders);
+                if (!res.ok) {
+                    console.error('Fetch orders failed', await res.text());
+                    setOrders([]);
+                    return;
+                }
+
+                const data = await res.json();
+                setOrders(data);
+            } catch (err) {
+                console.error('Fetch orders error', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
     }, []);
 
-    if (!user) return <div className="acc-wrap">Đang tải...</div>;
+    if (!user || loading) return <div className="acc-wrap">Đang tải...</div>;
 
     return (
         <div className="acc-wrap">
             <h1>Tài khoản của tôi</h1>
-
-            {/* Thông tin cá nhân */}
             <div className="acc-box">
                 <h2>Thông tin cá nhân</h2>
                 <p><b>Họ và tên:</b> {user.name}</p>
@@ -58,8 +75,12 @@ export default function TaiKhoan() {
                             {orders.map((o) => (
                                 <tr key={o.id}>
                                     <td>{o.id}</td>
-                                    <td>{o.date}</td>
-                                    <td>{o.total.toLocaleString()}₫</td>
+                                    <td>
+                                        {o.createdAt
+                                            ? new Date(o.createdAt).toLocaleString('vi-VN')
+                                            : ''}
+                                    </td>
+                                    <td>{o.totalPrice?.toLocaleString('vi-VN') || 0}₫</td>
                                     <td>
                                         <span className={`status ${o.status || 'pending'}`}>
                                             {o.status === 'done' ? 'Hoàn tất' : 'Đang xử lý'}

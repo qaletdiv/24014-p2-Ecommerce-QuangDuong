@@ -22,7 +22,9 @@ export default function TrangSanPham() {
     const searchParams = useSearchParams();
     const keyword = (searchParams.get('search') || '').trim();
     const keywordNorm = normalizeText(keyword);
-
+    useEffect(() => {
+        setTrangHienTai(1);
+    }, [keywordNorm]);
     const fetchData = async () => {
         try {
             setDangTai(true);

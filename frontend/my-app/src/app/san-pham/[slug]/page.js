@@ -64,12 +64,12 @@ export default function ChiTietSanPham() {
         }
 
         // Lấy giỏ hàng cũ
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        // Xem sản phẩm này đã có trong giỏ chưa
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        // check sp trong giỏ hàng có ch
         const existingIndex = cart.findIndex(
-            item => item.id === sp.id && item.size === size && item.color === color
+            (item) => item.id === sp.id && item.size === size && item.color === color
         );
+
 
         if (existingIndex !== -1) {
             cart[existingIndex].qty += soLuong;
@@ -84,12 +84,12 @@ export default function ChiTietSanPham() {
                 qty: soLuong
             });
         }
-
-        // Lưu vào localStorage
         localStorage.setItem("cart", JSON.stringify(cart));
+        window.dispatchEvent(new Event('cart-updated'));
 
-        alert(` Đã thêm vào giỏ: ${sp.name}`);
+        alert(`Đã thêm vào giỏ: ${sp.name}`);
     };
+
 
 
     if (loading) return <div className="pd-wrap">Đang tải...</div>;
